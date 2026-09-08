@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220">
+<title>RJ Pocket Toolkit</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#162033;--muted:#64748b;--line:#dfe6ef;--dark:#0b1220;--accent:#2563eb;--green:#059669;--red:#dc2626;--gold:#b58a16;--soft:#eef3f8}
+*{box-sizing:border-box}body.app-locked > *:not(#authGate){display:none!important}body{margin:0;background:var(--bg);font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text)}
+header{background:linear-gradient(135deg,#08101f,#172033);color:#fff;padding:18px 16px;text-align:center;position:sticky;top:0;z-index:50;box-shadow:0 6px 25px #0003}header h1{margin:0;font-size:26px}header p{margin:5px 0 0;color:#cbd5e1;font-size:12px}
+.container{max-width:1240px;margin:auto;padding:16px}.nav{display:flex;gap:8px;overflow:auto;padding:4px 0 14px;scrollbar-width:thin}.nav button{white-space:nowrap;border:1px solid var(--line);background:#fff;padding:10px 13px;border-radius:10px;font-weight:800;cursor:pointer}.nav button.active{background:var(--dark);color:#fff}
+.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 5px 20px #0f172a0a}
+h2{margin:0 0 15px;font-size:21px}h3{margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+label{font-size:12px;font-weight:800;color:#475569;display:block;margin-bottom:5px}input,select,textarea{width:100%;border:1px solid #d5deea;border-radius:9px;padding:11px;background:#fff;font-size:14px;outline:none}input:focus,select:focus,textarea:focus{border-color:#7b9ad8;box-shadow:0 0 0 3px #2563eb12}textarea{min-height:80px}
+button.primary,.btn{border:0;border-radius:9px;background:var(--dark);color:#fff;padding:11px 15px;font-weight:800;cursor:pointer}.btn.light{background:#e9eef5;color:#172033}.btn.green{background:var(--green)}.btn.red{background:var(--red)}.btn.gold{background:var(--gold)}.btn.blue{background:var(--accent)}.btn.small{padding:8px 10px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.items{overflow-x:auto}.item{display:grid;grid-template-columns:2.5fr .65fr 1fr 1fr 42px;gap:7px;min-width:740px;margin:7px 0}.item.head{font-size:11px;font-weight:800;color:#64748b}.item input{padding:9px}
+.invoice{background:#fff;border:1px solid #cbd5e1;max-width:920px;margin:18px auto 0;padding:38px;box-shadow:0 8px 28px #0000000b}
+.inv-head{display:flex;justify-content:space-between;gap:25px;border-bottom:2px solid #111827;padding-bottom:18px}.brand{font-size:25px;font-weight:900}.small{font-size:12px;color:#64748b;line-height:1.65}.right{text-align:right}.invoice h3{margin:0 0 8px;font-size:25px}
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin:22px 0}.label{font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;margin-bottom:5px}
+.inv-table{width:100%;border-collapse:collapse}.inv-table th{background:#f1f5f9;font-size:11px;text-transform:uppercase}.inv-table th,.inv-table td{padding:9px;border-bottom:1px solid #e2e8f0;font-size:12px}.num{text-align:right}
+.summary{width:340px;margin:18px 0 0 auto}.sumrow{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}.total{border-top:2px solid #111827;font-size:18px;font-weight:900;padding-top:10px}.badge{display:inline-block;padding:5px 10px;border-radius:20px;background:#e2e8f0;font-size:10px;font-weight:900}.footer-note{border-top:1px solid #e2e8f0;margin-top:35px;padding-top:12px;font-size:11px;color:#64748b}.signbox{text-align:right;margin-top:35px;min-height:85px}.signimg{max-width:170px;max-height:70px;object-fit:contain;display:inline-block}
+.statgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}.stat .n{font-size:25px;font-weight:900;margin-top:6px}.muted{color:var(--muted);font-size:12px}.result{margin-top:14px;padding:13px;border-radius:10px;background:#f7f9fc;border:1px solid var(--line);line-height:1.7}
+.history-row{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid var(--line);border-radius:12px;padding:13px;margin:8px 0;background:#fff}.history-main{min-width:0}.history-main b{display:block}.history-main span{font-size:12px;color:var(--muted)}.history-actions{display:flex;gap:6px;flex-wrap:wrap}.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed #cbd5e1;border-radius:12px}
+.toast{position:fixed;right:18px;bottom:18px;z-index:100;background:#0b1220;color:#fff;padding:12px 16px;border-radius:10px;box-shadow:0 10px 30px #0004;display:none}.toast.show{display:block}.danger-note{padding:11px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px}
+.search{margin-bottom:10px}.tablewrap{overflow:auto}.simpletable{width:100%;border-collapse:collapse}.simpletable th,.simpletable td{padding:10px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}.simpletable th{font-size:11px;text-transform:uppercase;color:var(--muted)}
+@media(max-width:850px){.grid4,.statgrid{grid-template-columns:repeat(2,1fr)}}@media(max-width:650px){.container{padding:10px}.grid,.grid3,.grid4,.parties,.statgrid{grid-template-columns:1fr}.invoice{padding:18px}.inv-head{flex-direction:column}.right{text-align:left}.summary{width:100%}.history-row{align-items:flex-start;flex-direction:column}.history-actions{width:100%}}
+.upgrade-modal{position:fixed;inset:0;background:#07111fcc;backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px}.upgrade-box{width:min(720px,100%);background:#fff;border-radius:24px;padding:24px;box-shadow:0 25px 80px #0007}.upgrade-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.upgrade-head h2{margin:5px 0}.upgrade-head p{margin:0;color:#64748b}.upgrade-close{border:0;background:#eef2f7;border-radius:50%;width:38px;height:38px;font-size:25px;cursor:pointer}.upgrade-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}.upgrade-option{border:1px solid #dbe3ef;background:#f8fafc;border-radius:18px;padding:20px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:7px;transition:.2s}.upgrade-option:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0f172a18}.upgrade-option.featured{border:2px solid #2563eb;background:linear-gradient(145deg,#eff6ff,#fff)}.upgrade-option span{font-weight:900;color:#334155}.upgrade-option strong{font-size:30px;color:#0f172a}.upgrade-option small{color:#64748b}.upgrade-option em{font-style:normal;font-size:10px;background:#2563eb;color:#fff;padding:4px 7px;border-radius:999px;margin-left:6px}.upgrade-status{margin-top:14px;text-align:center;font-size:12px;color:#64748b}@media(max-width:650px){.upgrade-options{grid-template-columns:1fr}}
+@media print{body{background:#fff}.no-print,header,.nav,.toolcard,.print-hide{display:none!important}.panel.printable{display:none!important}.panel.printable.active{display:block!important}.invoice{border:0;box-shadow:none;max-width:none;margin:0;padding:8mm}}
+
+/* RJ Pocket Toolkit Premium UI */
+body{background:radial-gradient(circle at 15% 0%,#eaf2ff 0,#f7f9fc 35%,#eef3f9 100%)}
+.nav{padding:10px 0 16px}.nav button{transition:.2s;box-shadow:0 4px 14px #0f172a0a}.nav button:hover{transform:translateY(-2px);border-color:#9bb6e8}.nav button.active{background:linear-gradient(135deg,#0b1220,#1d4ed8);box-shadow:0 8px 24px #2563eb33}
+.dashboard-card{border-radius:20px;box-shadow:0 14px 35px #0f172a10}.dash-hero{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:28px 30px;margin-bottom:16px;border-radius:24px;color:#fff;background:linear-gradient(120deg,#07111f 0%,#14284b 55%,#2563eb 100%);box-shadow:0 18px 45px #0b122033}.dash-hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-70px;top:-100px;background:#7c3aed55;filter:blur(8px);animation:floatOrb 5s ease-in-out infinite}.dash-hero h2{font-size:30px;margin:4px 0}.dash-hero p{margin:0;color:#dbeafe;max-width:650px}.eyebrow{font-size:11px;letter-spacing:2px;font-weight:900;color:#93c5fd}.hero-orb{position:relative;z-index:1;display:flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid #ffffff2e;background:#ffffff12;border-radius:16px;backdrop-filter:blur(10px)}.hero-orb span{font-size:28px}.hero-orb small{font-weight:800;line-height:1.3}.modern-stats .stat{position:relative;overflow:hidden;border:0;min-height:150px;padding:20px;border-radius:20px;box-shadow:0 12px 30px #0f172a12;transition:.25s}.modern-stats .stat:hover{transform:translateY(-5px);box-shadow:0 18px 38px #0f172a1c}.modern-stats .stat:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-35px;bottom:-45px;background:#ffffff55}.stat-blue{background:linear-gradient(135deg,#eff6ff,#dbeafe)}.stat-green{background:linear-gradient(135deg,#ecfdf5,#d1fae5)}.stat-purple{background:linear-gradient(135deg,#f5f3ff,#e9d5ff)}.stat-orange{background:linear-gradient(135deg,#fff7ed,#fed7aa)}.stat-icon{font-size:25px;margin-bottom:8px}.modern-stats .n{font-size:28px}.modern-stats span{font-size:11px;color:#64748b}.dash-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:16px;margin-top:16px}.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.card-head h2{margin-bottom:3px}.live-dot{font-size:11px;color:#059669;background:#ecfdf5;border:1px solid #a7f3d0;padding:6px 10px;border-radius:999px;font-weight:900}.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}.quick{border:0;border-radius:16px;padding:15px;text-align:left;cursor:pointer;color:#fff;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 10px 24px #0f172a1a;transition:.2s}.quick:hover{transform:translateY(-4px)}.quick b{font-size:25px}.quick span{font-weight:900}.quick small{opacity:.8}.q1{background:linear-gradient(145deg,#2563eb,#1d4ed8)}.q2{background:linear-gradient(145deg,#7c3aed,#6d28d9)}.q3{background:linear-gradient(145deg,#059669,#047857)}.q4{background:linear-gradient(145deg,#ea580c,#c2410c)}.snapshot-content{display:grid;gap:10px;margin-top:12px}.snap-row{display:flex;justify-content:space-between;padding:12px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0;font-size:13px}.recent-card{margin-top:16px}.recent-list{margin-top:12px}.recent-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid #e2e8f0}.recent-row:last-child{border-bottom:0}.recent-row b,.recent-row span{display:block}.recent-row span{font-size:11px;color:#64748b;margin-top:3px}.recent-row strong{font-size:14px}.auth-card{position:relative;overflow:hidden;background:linear-gradient(145deg,#ffffff,#f5f8ff);border:1px solid #ffffffaa}.auth-card:before{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:#2563eb22;left:-70px;top:-70px;animation:floatOrb 6s ease-in-out infinite}.auth-card:after{content:"";position:absolute;width:160px;height:160px;border-radius:50%;background:#7c3aed20;right:-70px;bottom:-70px;animation:floatOrb 7s ease-in-out infinite reverse}.auth-logo,.auth-card h1,.auth-card .muted,.auth-card label,.auth-card input,.auth-actions,.auth-card button,.auth-msg{position:relative;z-index:1}.auth-logo{animation:logoPulse 2.8s ease-in-out infinite;filter:drop-shadow(0 8px 18px #2563eb33)}.auth-card h1{font-size:27px}.auth-actions button,.auth-card .btn{transition:.2s}.auth-actions button:hover,.auth-card .btn:hover{transform:translateY(-2px)}.auth-card .primary{background:linear-gradient(135deg,#0b1220,#2563eb);box-shadow:0 10px 24px #2563eb35}.auth-card input:focus{transform:translateY(-1px)}@keyframes floatOrb{0%,100%{transform:translate(0,0)}50%{transform:translate(-12px,12px)}}@keyframes logoPulse{0%,100%{transform:scale(1) rotate(0)}50%{transform:scale(1.05) rotate(1deg)}}
+@media(max-width:850px){.dash-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:repeat(2,1fr)}.dash-hero{padding:22px}.dash-hero h2{font-size:25px}}@media(max-width:650px){.quick-grid{grid-template-columns:1fr 1fr}.dash-hero{align-items:flex-start}.hero-orb{display:none}}
+
+/* V7 subscription UI */
+.plan-card{margin:16px 0;padding:18px 20px;border:1px solid #dbe5f4;border-radius:20px;background:linear-gradient(135deg,#f8fbff,#eef4ff);display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 12px 30px rgba(15,23,42,.07)}
+.plan-card .plan-left{display:flex;align-items:center;gap:14px}.plan-badge{padding:7px 11px;border-radius:999px;background:#0b1220;color:#fff;font-size:12px;font-weight:800;letter-spacing:.4px}.plan-badge.pro{background:linear-gradient(135deg,#7c3aed,#2563eb)}
+.plan-meter{height:8px;background:#dbe5f4;border-radius:99px;overflow:hidden;margin-top:8px;max-width:360px}.plan-meter span{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:99px;transition:width .5s ease}.plan-card small{display:block;color:#64748b;margin-top:4px}.plan-upgrade{border:0;border-radius:12px;padding:11px 16px;background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-weight:800;cursor:pointer;box-shadow:0 8px 20px rgba(37,99,235,.22)}
+@media(max-width:700px){.plan-card{align-items:flex-start;flex-direction:column}.plan-upgrade{width:100%}}
+
+.phone-modal{position:fixed;inset:0;z-index:100000;background:rgba(7,17,31,.72);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:18px}.phone-modal.show{display:flex}.phone-modal-box{width:min(430px,100%);background:#fff;border:1px solid #dbe3ef;border-radius:20px;padding:24px;box-shadow:0 25px 80px rgba(0,0,0,.35);animation:phoneModalIn .18s ease-out}.phone-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.phone-modal-head h3{margin:0;font-size:20px}.phone-modal-close{border:0;background:#eef2f7;border-radius:50%;width:34px;height:34px;font-size:21px;cursor:pointer}.phone-modal-sub{margin:6px 0 18px;color:#64748b;font-size:13px;line-height:1.5}.phone-modal-box input{margin:0 0 10px}.phone-modal-actions{display:flex;gap:9px;margin-top:8px}.phone-modal-actions button{flex:1}.phone-modal-error{min-height:18px;margin-top:10px;color:#dc2626;font-size:12px;text-align:center}.phone-modal-step{display:none}.phone-modal-step.active{display:block}@keyframes phoneModalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+</style>
+
+<style>
+#authGate{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto;background:radial-gradient(circle at 15% 20%,#2563eb66 0 7%,transparent 28%),radial-gradient(circle at 88% 18%,#7c3aed55 0 6%,transparent 25%),linear-gradient(135deg,#020617 0%,#071a35 45%,#0b3a67 100%)}#authGate:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#02061799),repeating-linear-gradient(115deg,transparent 0 55px,#ffffff08 56px 57px);pointer-events:none}.auth-card{position:relative;width:min(470px,100%);background:linear-gradient(145deg,#fffffffa,#eef6fffa);border:1px solid #ffffff80;border-radius:28px;padding:30px;box-shadow:0 30px 100px #0009;backdrop-filter:blur(18px);overflow:hidden}.auth-card:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;right:-130px;top:-150px;background:#38bdf833;filter:blur(8px)}.auth-card:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;left:-130px;bottom:-150px;background:#7c3aed22;filter:blur(8px)}.auth-card>*{position:relative;z-index:1}.auth-logo{width:76px;height:76px;object-fit:contain;display:block;margin:0 auto 12px;filter:drop-shadow(0 12px 25px #2563eb40);animation:authLogoFloat 3.5s ease-in-out infinite}.auth-card h1{text-align:center;margin:0 0 5px;font-size:30px;letter-spacing:-.6px}.auth-card .muted{text-align:center}.auth-card input{width:100%;box-sizing:border-box;margin:7px 0 12px;background:#ffffffd9}.auth-actions{display:flex;gap:10px}.auth-actions button{flex:1}.auth-msg{min-height:20px;margin-top:12px;text-align:center;font-size:13px;font-weight:700}.userbar{display:flex;align-items:center;gap:10px;margin-left:auto}.user-email{font-size:12px;opacity:.85}.logout-btn{border:0;border-radius:10px;padding:8px 12px;cursor:pointer;font-weight:700}.trial-pill{background:#fff3cd;border:1px solid #ffe08a;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700}.launch-offer{margin:16px 0 18px;padding:13px 14px;border-radius:15px;background:linear-gradient(135deg,#eff6ffcc,#f5f3ffdd);border:1px solid #bfdbfe;color:#1e3a8a;text-align:center;font-size:13px;font-weight:900}.launch-offer small{display:block;margin-top:4px;color:#475569;font-weight:600}.auth-kicker{text-align:center;font-size:10px;letter-spacing:2px;font-weight:900;color:#2563eb;margin-top:3px}.auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:#94a3b8;font-size:11px}.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:#cbd5e1}.security-card{border:1px solid #dbe5f2;background:linear-gradient(135deg,#f8fbff,#f1f5ff);border-radius:18px;padding:18px;margin-bottom:16px}.security-card .security-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.security-card h3{margin:0}.security-email{font-size:12px;color:#64748b;margin-top:3px;word-break:break-all}.password-modal{position:fixed;inset:0;z-index:10001;background:#020617b8;backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:18px}.password-modal.show{display:flex}body.app-locked #passwordModal.show{display:flex!important}.password-box{width:min(480px,100%);background:#fff;border-radius:24px;padding:24px;box-shadow:0 30px 100px #0008}.password-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.password-close{border:0;background:#eef2f7;border-radius:50%;width:38px;height:38px;font-size:24px;cursor:pointer}.password-help{font-size:12px;color:#64748b;line-height:1.5}.password-actions{display:flex;gap:10px;margin-top:14px}.password-actions>*{flex:1}.password-msg{min-height:20px;margin-top:12px;font-size:13px;font-weight:700;text-align:center}@keyframes authLogoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}@media(max-width:650px){.auth-card{padding:22px}.auth-actions{flex-direction:column}.password-actions{flex-direction:column}}
+</style>
+</head>
+<body class="app-locked">
+<div id="authGate">
+  <div class="auth-card">
+    <div class="auth-kicker">RJ TECH • SECURE WORKSPACE</div>
+    <img class="auth-logo" src="rj-tech-logo.png" alt="RJ TECH">
+    <h1>RJ Pocket Toolkit</h1>
+    <p class="muted">One secure login for your invoices, quotations, customers and cloud-synced business data.</p>
+    <div class="launch-offer">🎉 Launch Offer — RJ Pocket Toolkit is FREE for everyone!<small>All available features are currently free during the initial launch period.</small></div>
+    <div id="authForm">
+      <label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com">
+      <label>Password</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Enter your password">
+      <div class="auth-actions">
+        <button class="primary" onclick="loginUser()">🔐 Login</button>
+        <button class="btn light" onclick="registerUser()">Create Account</button>
+      </div>
+      <div class="auth-divider">OR CONTINUE WITH</div>
+      <div class="auth-actions">
+        <button class="btn light" onclick="googleLogin()">🔵 Google</button>
+        <button class="btn light" onclick="phoneLogin()">📱 Phone OTP</button>
+      </div>
+      <button class="btn light" style="width:100%;margin-top:10px" onclick="resetPassword()">🔑 Forgot / Reset Password</button>
+      <div class="auth-msg" id="authMsg"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="password-modal" id="passwordModal" aria-hidden="true">
+  <div class="password-box" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+    <div class="password-head"><div><h2 id="passwordModalTitle">🔐 Change Password</h2><p class="password-help" id="passwordModalHelp">Choose a new password for your account.</p></div><button class="password-close" type="button" onclick="closePasswordModal()">×</button></div>
+    <label style="margin-top:14px">New Password</label><input id="newPassword" type="password" autocomplete="new-password" placeholder="Minimum 6 characters">
+    <label>Confirm New Password</label><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter new password">
+    <div class="password-actions"><button class="btn light" type="button" onclick="closePasswordModal()">Cancel</button><button class="primary" type="button" onclick="saveNewPassword()">Update Password</button></div>
+    <div class="password-msg" id="passwordMsg"></div>
+  </div>
+</div>
+
+<div class="phone-modal" id="phoneLoginModal" aria-hidden="true">
+  <div class="phone-modal-box" role="dialog" aria-modal="true" aria-labelledby="phoneModalTitle">
+    <div class="phone-modal-head">
+      <h3 id="phoneModalTitle">📱 Login with Phone</h3>
+      <button class="phone-modal-close" type="button" onclick="closePhoneModal()" aria-label="Close">×</button>
+    </div>
+    <div class="phone-modal-step active" id="phoneStepNumber">
+      <p class="phone-modal-sub">Enter your mobile number with country code. Example: <b>+919876543210</b></p>
+      <input id="phoneNumberInput" type="tel" inputmode="tel" autocomplete="tel" placeholder="+919876543210">
+      <div class="phone-modal-actions">
+        <button class="btn light" type="button" onclick="closePhoneModal()">Cancel</button>
+        <button class="primary" type="button" onclick="sendPhoneOtp()">Send OTP</button>
+      </div>
+    </div>
+    <div class="phone-modal-step" id="phoneStepOtp">
+      <p class="phone-modal-sub" id="phoneOtpHint">Enter the OTP sent to your phone.</p>
+      <input id="phoneOtpInput" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit OTP">
+      <div class="phone-modal-actions">
+        <button class="btn light" type="button" onclick="backToPhoneNumber()">Back</button>
+        <button class="primary" type="button" onclick="verifyPhoneOtp()">Verify & Login</button>
+      </div>
+    </div>
+    <div class="phone-modal-error" id="phoneModalError"></div>
+  </div>
+</div>
+
+<header><h1>RJ Pocket Toolkit</h1><p>Professional business toolkit • Cloud sync • Local backup recommended</p></header>
+<div class="container">
+<div class="nav no-print" id="nav"></div><div class="userbar no-print"><span class="trial-pill">☁ Cloud</span><span class="user-email" id="loggedUser"></span><button class="logout-btn" onclick="logoutUser()">Logout</button></div>
+
+<section class="panel active" id="dashboardPanel">
+<div class="dash-hero"><div><div class="eyebrow">RJ TECH • BUSINESS COMMAND CENTER</div><h2>Welcome back 👋</h2><p>Manage invoices, quotations, customers and business tools from one secure workspace.</p></div><div class="hero-orb"><span>☁</span><small>Cloud<br>Synced</small></div></div>
+<div class="statgrid modern-stats">
+<div class="stat stat-blue"><div class="stat-icon">🧾</div><div class="muted">Saved Invoices</div><div class="n" id="dashInvoices">0</div><span>Documents created</span></div>
+<div class="stat stat-green"><div class="stat-icon">₹</div><div class="muted">Invoice Sales</div><div class="n" id="dashInvoiceValue">₹0</div><span>Total invoice value</span></div>
+<div class="stat stat-purple"><div class="stat-icon">📋</div><div class="muted">Quotations</div><div class="n" id="dashQuotes">0</div><span>Quotes created</span></div>
+<div class="stat stat-orange"><div class="stat-icon">📈</div><div class="muted">Quotation Value</div><div class="n" id="dashQuoteValue">₹0</div><span>Potential business</span></div>
+</div>
+<div class="dash-grid">
+<div class="card dashboard-card"><div class="card-head"><div><h2>Quick Actions</h2><p class="muted">Jump directly to your daily work</p></div><span class="live-dot">● Ready</span></div><div class="quick-grid"><button class="quick q1" onclick="newInvoice()"><b>＋</b><span>New Invoice</span><small>Create & save</small></button><button class="quick q2" onclick="newQuotation()"><b>＋</b><span>New Quotation</span><small>Send a quote</small></button><button class="quick q3" onclick="showPanel('customersPanel')"><b>＋</b><span>Add Customer</span><small>Customer master</small></button><button class="quick q4" onclick="showPanel('productsPanel')"><b>＋</b><span>Add Item</span><small>Products & services</small></button></div></div>
+<div class="card dashboard-card snapshot-card"><div class="card-head"><div><h2>Business Snapshot</h2><p class="muted">Your current account overview</p></div></div><div id="snapshot" class="snapshot-content">No data yet.</div></div>
+</div>
+<div class="card dashboard-card recent-card"><div class="card-head"><div><h2>Recent Invoices</h2><p class="muted">Latest documents in this account</p></div><button class="btn light small" onclick="showPanel('invoiceHistoryPanel')">View all →</button></div><div id="dashRecent" class="recent-list"></div></div>
+</section>
+
+<section class="panel printable" id="invoicePanel">
+<div class="card toolcard">
+<h2>Professional Invoice</h2>
+<div class="grid" style="margin-bottom:14px">
+<div><label>🖼️ Business Logo</label><input id="logoUpload" type="file" accept="image/*" onchange="loadImage(this,'logoData','invoice')"><input id="logoData" type="hidden"></div>
+<div><label>✍️ Authorized Signature</label><input id="signatureUpload" type="file" accept="image/*" onchange="loadImage(this,'signatureData','invoice')"><input id="signatureData" type="hidden"></div>
+</div>
+<div class="grid">
+<div><label>Business Name</label><input id="company"></div><div><label>Invoice No.</label><input id="invoiceNo" readonly></div>
+<div><label>Business Address</label><input id="companyAddress"></div><div><label>Invoice Date</label><input id="invoiceDate" type="date"></div>
+<div><label>Phone</label><input id="companyPhone"></div><div><label>Email</label><input id="companyEmail"></div>
+<div><label>GSTIN</label><input id="companyGSTIN"></div><div><label>Payment Status</label><select id="status"><option>PAID</option><option>PENDING</option><option>PARTIALLY PAID</option></select></div>
+</div>
+<hr style="border:0;border-top:1px solid #e2e8f0;margin:20px 0">
+<div class="grid">
+<div><label>Bill To - Customer</label><input id="customer" list="customerList" placeholder="Customer / Company" oninput="suggestCustomer(this.value)"></div><div><label>Customer Phone</label><input id="customerPhone"></div>
+<div><label>Customer Address</label><input id="customerAddress"></div><div><label>Customer GSTIN</label><input id="customerGSTIN"></div>
+</div>
+<datalist id="customerList"></datalist>
+<div class="items" style="margin-top:18px"><div class="item head"><span>Description</span><span>Qty</span><span>Rate</span><span>Amount</span><span></span></div><div id="items"></div></div>
+<div class="actions no-print"><button class="btn light" onclick="addItem()">＋ Add Item</button></div>
+<div class="grid3" style="margin-top:14px">
+<div><label>Discount (₹)</label><input id="discount" type="number" value="0" min="0" oninput="renderInvoicePreview()"></div>
+<div><label>GST (%)</label><input id="tax" type="number" value="18" min="0" oninput="renderInvoicePreview()"></div>
+<div><label>Tax Type</label><select id="taxType" onchange="renderInvoicePreview()"><option value="split">CGST + SGST</option><option value="igst">IGST</option><option value="gst">GST (single)</option></select></div>
+</div>
+<div class="grid3" style="margin-top:12px">
+<div><label>Amount Received (₹)</label><input id="received" type="number" min="0" value="0" oninput="renderInvoicePreview()"></div>
+<div><label>Payment Method</label><select id="paymentMethod"><option>Cash</option><option>UPI</option><option>Bank Transfer</option><option>Card</option><option>Cheque</option><option>Other</option></select></div>
+<div><label>Due Date</label><input id="dueDate" type="date" oninput="renderInvoicePreview()"></div>
+</div>
+<div style="margin-top:12px"><label>Notes / Terms</label><textarea id="notes" placeholder="Thank you for your business."></textarea></div>
+<div class="actions no-print"><button class="primary" onclick="saveInvoice()">💾 Save Invoice</button><button class="btn green" onclick="newInvoice()">＋ New Invoice</button><button class="btn blue" onclick="window.print()">🖨 Print / Save PDF</button></div>
+<div id="saveMsg" class="muted" style="margin-top:9px"></div>
+</div>
+<div class="invoice" id="invoice"></div>
+</section>
+
+<section class="panel" id="invoiceHistoryPanel">
+<div class="card"><h2>📁 Invoice History</h2><input class="search" id="invoiceSearch" placeholder="Search invoice no, customer or status..." oninput="renderInvoiceHistory()"><div id="invoiceHistory"></div></div>
+</section>
+
+<section class="panel printable" id="quotationPanel">
+<div class="card toolcard">
+<h2>Professional Quotation</h2>
+<div class="grid" style="margin-bottom:14px">
+<div><label>🖼️ Business Logo</label><input id="qLogoUpload" type="file" accept="image/*" onchange="loadImage(this,'qLogoData','quote')"><input id="qLogoData" type="hidden"></div>
+<div><label>✍️ Authorized Signature</label><input id="qSignatureUpload" type="file" accept="image/*" onchange="loadImage(this,'qSignatureData','quote')"><input id="qSignatureData" type="hidden"></div>
+</div>
+<div class="grid">
+<div><label>Business Name</label><input id="qCompany"></div><div><label>Quotation No.</label><input id="quoteNo" readonly></div>
+<div><label>Business Address</label><input id="qCompanyAddress"></div><div><label>Quotation Date</label><input id="quoteDate" type="date"></div>
+<div><label>Phone</label><input id="qCompanyPhone"></div><div><label>Email</label><input id="qCompanyEmail"></div>
+<div><label>GSTIN</label><input id="qCompanyGSTIN"></div><div><label>Valid Until</label><input id="validUntil" type="date"></div>
+</div>
+<hr style="border:0;border-top:1px solid #e2e8f0;margin:20px 0">
+<div class="grid">
+<div><label>Quote For - Customer</label><input id="qCustomer" list="customerList"></div><div><label>Customer Phone</label><input id="qCustomerPhone"></div>
+<div><label>Customer Address</label><input id="qCustomerAddress"></div><div><label>Customer GSTIN</label><input id="qCustomerGSTIN"></div>
+</div>
+<div class="items" style="margin-top:18px"><div class="item head"><span>Description</span><span>Qty</span><span>Rate</span><span>Amount</span><span></span></div><div id="qItems"></div></div>
+<div class="actions no-print"><button class="btn light" onclick="addQItem()">＋ Add Item</button></div>
+<div class="grid3" style="margin-top:14px">
+<div><label>Discount (₹)</label><input id="qDiscount" type="number" value="0" min="0" oninput="renderQuotationPreview()"></div>
+<div><label>GST (%)</label><input id="qTax" type="number" value="18" min="0" oninput="renderQuotationPreview()"></div>
+<div><label>Tax Type</label><select id="qTaxType" onchange="renderQuotationPreview()"><option value="split">CGST + SGST</option><option value="igst">IGST</option><option value="gst">GST (single)</option></select></div>
+</div>
+<div style="margin-top:12px"><label>Quotation Terms / Notes</label><textarea id="qNotes" placeholder="Quotation valid until the date mentioned above."></textarea></div>
+<div class="actions no-print"><button class="primary" onclick="saveQuotation()">💾 Save Quotation</button><button class="btn gold" onclick="newQuotation()">＋ New Quotation</button><button class="btn blue" onclick="window.print()">🖨 Print / Save PDF</button></div>
+<div id="quoteMsg" class="muted" style="margin-top:9px"></div>
+</div>
+<div class="invoice" id="quotation"></div>
+</section>
+
+<section class="panel" id="quotationHistoryPanel"><div class="card"><h2>📁 Quotation History</h2><input class="search" id="quoteSearch" placeholder="Search quotation no or customer..." oninput="renderQuotationHistory()"><div id="quotationHistory"></div></div></section>
+
+<section class="panel" id="customersPanel">
+<div class="card"><h2>👥 Customer Master</h2><div class="grid"><div><label>Customer / Company Name</label><input id="custName"></div><div><label>Phone</label><input id="custPhone"></div><div><label>Address</label><input id="custAddress"></div><div><label>GSTIN</label><input id="custGSTIN"></div><div><label>Email</label><input id="custEmail"></div></div><div class="actions"><button class="btn" onclick="saveCustomer()">＋ Save Customer</button><button class="btn light" onclick="clearCustomerForm()">Clear</button></div><div class="tablewrap" style="margin-top:15px"><table class="simpletable"><thead><tr><th>Customer</th><th>Phone</th><th>GSTIN</th><th>Action</th></tr></thead><tbody id="customerTable"></tbody></table></div></div>
+</section>
+
+<section class="panel" id="productsPanel">
+<div class="card"><h2>🧰 Products & Services</h2><div class="grid"><div><label>Item / Service Name</label><input id="prodName"></div><div><label>Default Rate (₹)</label><input id="prodRate" type="number"></div><div><label>Unit</label><input id="prodUnit" placeholder="Nos / Hour / Service"></div></div><div class="actions"><button class="btn" onclick="saveProduct()">＋ Save Item</button><button class="btn light" onclick="clearProductForm()">Clear</button></div><div class="tablewrap" style="margin-top:15px"><table class="simpletable"><thead><tr><th>Item / Service</th><th>Unit</th><th>Rate</th><th>Action</th></tr></thead><tbody id="productTable"></tbody></table></div></div>
+</section>
+
+<section class="panel" id="toolsPanel">
+<div class="grid">
+<div class="card"><h2>GST Calculator</h2><div class="grid"><div><label>Amount</label><input id="gstAmount" type="number" value="1000"></div><div><label>GST %</label><input id="gstRate" type="number" value="18"></div></div><button class="btn" onclick="gstCalc()">Calculate</button><div class="result" id="gstResult"></div></div>
+<div class="card"><h2>EMI Calculator</h2><div class="grid3"><div><label>Loan (₹)</label><input id="emiP" type="number" value="100000"></div><div><label>Interest %</label><input id="emiR" type="number" value="10"></div><div><label>Months</label><input id="emiN" type="number" value="24"></div></div><button class="btn" onclick="emiCalc()">Calculate EMI</button><div class="result" id="emiResult"></div></div>
+<div class="card"><h2>Profit / Margin</h2><div class="grid"><div><label>Cost Price</label><input id="costPrice" type="number"></div><div><label>Selling Price</label><input id="sellPrice" type="number"></div></div><button class="btn" onclick="profitCalc()">Calculate</button><div class="result" id="profitResult"></div></div>
+<div class="card"><h2>Number → Words</h2><input id="numberInput" type="number" value="12500"><button class="btn" onclick="wordsCalc()">Convert</button><div class="result" id="numberResult"></div></div>
+</div>
+</section>
+
+<section class="panel" id="appInfoPanel">
+<div class="card"><h2>ℹ️ About RJ Pocket Toolkit</h2>
+<p><b>RJ Pocket Toolkit</b> is a business utility for creating invoices, quotations, managing customers and items, and using common business calculators.</p>
+<p><b>Publisher / Developer:</b> RJ TECH Solutions • Pune, Maharashtra</p>
+<p><b>Current release:</b> Free Launch Edition</p>
+<p><b>Why is it free?</b> RJ Pocket Toolkit is currently offered free to everyone during its initial launch period. We are opening the app to users for the first 2–3 months so we can understand real-world usage, collect feedback, improve reliability and make the product better before introducing any paid plans.</p>
+<p><b>Launch policy:</b> There is currently no payment requirement for the available app features. Future pricing or subscription changes, if introduced, will be communicated clearly before they take effect.</p>
+<p><b>Account:</b> A login is required so your cloud data can remain separated by account and synchronized across supported devices.</p>
+</div>
+<div class="card"><h2>🔐 Privacy & Data Policy</h2>
+<p><b>What we store:</b> account email or supported login identity, business settings, invoices, quotations, customer details, item/service details and app preferences that you choose to save.</p>
+<p><b>Why we store it:</b> to provide login, cloud synchronization, invoice/quotation history and backup/restore features.</p>
+<p><b>Where data is stored:</b> the app can keep working data in browser/app storage and synchronizes your account data to the configured Supabase cloud database. Access is designed to be restricted to the authenticated account.</p>
+<p><b>Your responsibility:</b> do not enter information you are not authorized to store. Before deleting browser/app data, changing devices, or uninstalling the app, export a backup.</p>
+<p><b>Data deletion:</b> if you want your account/cloud data deleted, contact the publisher using the support/business contact provided in the app. Deletion requests may require account verification.</p>
+<p><b>Third parties:</b> authentication, email/SMS delivery, Google sign-in and cloud database services may use configured third-party infrastructure. Their service availability and policies may apply.</p>
+<p><b>Security:</b> the app uses authenticated access and database-level user isolation. No online system can guarantee absolute security, so keep your login credentials private and maintain your own backup.</p>
+</div>
+<div class="card"><h2>📜 Terms of Use & Legal Notice</h2>
+<p>By creating or using an account, you agree to use RJ Pocket Toolkit lawfully and only for data and documents you are authorized to manage.</p>
+<p><b>Invoice/GST responsibility:</b> this app provides calculation and document-generation tools. It is not legal, tax, accounting or GST advice. You are responsible for checking invoice numbers, customer information, tax rates, GST treatment, totals, payment status and statutory compliance before issuing a document.</p>
+<p><b>Document responsibility:</b> generated invoices and quotations are user-created business records. The publisher is not responsible for incorrect information entered by the user.</p>
+<p><b>Service availability:</b> cloud, email, SMS, browser, internet and third-party services can experience outages or limits. Features may not be available continuously.</p>
+<p><b>Backups:</b> cloud synchronization is <b>not a substitute for your own backup</b>. For important business records, export the backup file regularly and keep a copy on your PC, external drive or other secure storage.</p>
+<p><b>Acceptable use:</b> do not use the app for unlawful, fraudulent, abusive or unauthorized activities.</p>
+<p><b>Changes:</b> features, policies and terms may be updated when the service changes. The latest version shown in the app applies to future use.</p>
+<p class="muted"><b>Important:</b> This is a general app policy/notice and is not a substitute for advice from a qualified lawyer, tax professional or compliance adviser.</p>
+</div>
+<div class="card"><h2>💾 Backup Rule</h2><div class="danger-note"><b>Do not rely only on cloud storage.</b><br>After important work, use <b>Settings → Backup & Restore → Export Backup</b> and keep the JSON backup file in a secure folder on your PC. If possible, keep a second copy on an external drive or another secure storage location.</div><div class="actions"><button class="btn blue" onclick="exportBackup()">⬇ Export Backup Now</button></div></div>
+</section>
+
+<section class="panel" id="adminPanel">
+<div class="card"><div class="card-head"><div><h2>🛡️ Admin User Management</h2><p class="muted">Only authorized RJ TECH administrators can view and control accounts.</p></div><button class="btn blue small" onclick="loadAdminUsers()">↻ Refresh</button></div><div id="adminMsg" class="muted" style="margin-top:10px"></div><div class="tablewrap" style="margin-top:14px"><table class="simpletable"><thead><tr><th>User</th><th>Created</th><th>Last Sign In</th><th>Status</th><th>Action</th></tr></thead><tbody id="adminUsersTable"></tbody></table></div></div>
+</section>
+<section class="panel" id="settingsPanel">
+<div class="security-card">
+  <div class="security-head"><div><h3>🔐 Account & Security</h3><div class="security-email" id="securityEmail">Signed in account</div></div><button class="btn blue" onclick="openPasswordModal('change')">Change Password</button></div>
+  <div class="muted" style="margin-top:10px">Change your login password anytime. Use a strong password that you do not share with anyone.</div>
+</div>
+<div class="card"><h2>⚙️ Business Settings</h2><p class="muted">These details are used automatically in new invoices and quotations.</p><div class="grid"><div><label>Business Name</label><input id="setCompany"></div><div><label>Phone</label><input id="setPhone"></div><div><label>Address</label><input id="setAddress"></div><div><label>Email</label><input id="setEmail"></div><div><label>GSTIN</label><input id="setGSTIN"></div><div><label>Default GST %</label><input id="setTax" type="number"></div></div><div class="grid" style="margin-top:12px"><div><label>Default Logo</label><input id="setLogo" type="file" accept="image/*" onchange="loadImage(this,'setLogoData','settings')"><input id="setLogoData" type="hidden"></div><div><label>Default Authorized Signature</label><input id="setSignature" type="file" accept="image/*" onchange="loadImage(this,'setSignatureData','settings')"><input id="setSignatureData" type="hidden"></div></div><div class="actions"><button class="btn" onclick="saveSettings()">💾 Save Business Settings</button></div></div>
+<div class="card"><h2>💾 Backup & Restore</h2><p class="muted">Export invoices, quotations, customers, products and settings as one JSON backup. Import it later on this device.</p><div class="actions"><button class="btn blue" onclick="exportBackup()">⬇ Export Backup</button><label class="btn light" style="display:inline-flex;align-items:center;cursor:pointer">⬆ Import Backup<input id="backupFile" type="file" accept=".json,application/json" onchange="importBackup(this)" style="display:none"></label><button class="btn red" onclick="clearAllData()">Delete All App Data</button></div><div class="danger-note" style="margin-top:12px">Keep a backup before clearing browser/app data. Local storage is device-specific.</div></div>
+</section>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Fill these two values from Supabase Dashboard > Connect > App Frameworks / API.
+// Use the Project URL and the PUBLISHABLE (anon) key only. NEVER put service_role/secret key here.
+const SUPABASE_URL = 'https://nosnyrvgkckdbvaendle.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_vzMi2ld-fUXL4Ob9ZuoS0w_08cO9PO4';
+let sb=null, currentUser=null, authReady=false, cloudBusy=false, activeUserId=null, cloudEpoch=0;
+const OLD_KEYS={invoices:'rj_v3_invoices',quotes:'rj_v3_quotes',customers:'rj_v3_customers',products:'rj_v3_products',settings:'rj_v3_settings',seq:'rj_v3_sequences'};
+function authMessage(msg,error=false){const e=document.getElementById('authMsg');if(e){e.textContent=msg;e.style.color=error?'#b42318':'#176b3a'}}
+function setAppVisible(v){document.getElementById('authGate').style.display=v?'none':'flex';document.body.classList.toggle('app-locked',!v);const u=document.getElementById('loggedUser');if(u)u.textContent=currentUser?.email||'';const se=document.getElementById('securityEmail');if(se)se.textContent=currentUser?.email||'Signed in account'}
+function activateUserStorage(uid){
+  const safe=String(uid||'').replace(/[^a-zA-Z0-9_-]/g,'_');
+  KEYS.invoices='rj_v5_'+safe+'_invoices';
+  KEYS.quotes='rj_v5_'+safe+'_quotes';
+  KEYS.customers='rj_v5_'+safe+'_customers';
+  KEYS.products='rj_v5_'+safe+'_products';
+  KEYS.settings='rj_v5_'+safe+'_settings';
+  KEYS.seq='rj_v5_'+safe+'_sequences';
+}
+function clearCurrentUserLocal(){Object.values(KEYS).forEach(k=>localStorage.removeItem(k));}
+function resetRuntimeState(){rows=[];qRows=[];editingInvoiceId=null;editingQuoteId=null;window.__rjCloudReady=false;document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));}
+function setEmptyUserLocal(){
+  localStorage.setItem(KEYS.invoices,'[]');
+  localStorage.setItem(KEYS.quotes,'[]');
+  localStorage.setItem(KEYS.customers,'[]');
+  localStorage.setItem(KEYS.products,'[]');
+  localStorage.setItem(KEYS.settings,'{}');
+  localStorage.setItem(KEYS.seq,'{}');
+}
+async function cloudGet(key, uid=activeUserId){
+  if(!sb||!uid||uid!==activeUserId)return null;
+  const {data,error}=await sb.from('app_data_secure').select('payload').eq('user_id',uid).eq('data_key',key).maybeSingle();
+  if(error)throw error;
+  return data?.payload??null;
+}
+async function cloudSave(key,value,uid=activeUserId,epoch=cloudEpoch){
+  if(!sb||!uid||uid!==activeUserId||epoch!==cloudEpoch)return false;
+  const {error}=await sb.rpc('rj_save_app_data_secure',{p_data_key:key,p_payload:value});
+  if(error){console.error('Cloud save failed',key,error);throw error;}
+  return true;
+}
+async function cloudLoadAll(uid){
+  if(!sb||!uid||uid!==activeUserId)return;
+  const map={invoices:KEYS.invoices,quotes:KEYS.quotes,customers:KEYS.customers,products:KEYS.products,settings:KEYS.settings,seq:KEYS.seq};
+  // Cloud is the source of truth. A missing row means an empty dataset.
+  for(const base of Object.keys(map)){
+    const v=await cloudGet(base,uid);
+    if(uid!==activeUserId)return;
+    localStorage.setItem(map[base],JSON.stringify(v!==null?v:(base==='settings'?{}:[])));
+  }
+}
+async function syncAllLocalToCloud(){
+  const uid=activeUserId;
+  if(!sb||!uid)return;
+  const epoch=cloudEpoch;
+  for(const k of Object.keys(KEYS)){
+    if(uid!==activeUserId||epoch!==cloudEpoch)break;
+    let v=safeParse(KEYS[k],k==='settings'?{}:[]);
+    const base=k==='invoices'?'invoices':k==='quotes'?'quotes':k==='customers'?'customers':k==='products'?'products':k==='settings'?'settings':'seq';
+    await cloudSave(base,v,uid,epoch);
+  }
+}
+async function loginUser(){if(!sb){authMessage('Supabase is not configured yet. Open supabase-config.js / this page and add Project URL + Publishable key.',true);return}const email=$('authEmail').value.trim(),password=$('authPassword').value;if(!email||!password){authMessage('Enter email and password.',true);return}authMessage('Signing in...');const {data,error}=await sb.auth.signInWithPassword({email,password});if(error){authMessage(error.message,true);return}await onSignedIn(data.user)}
+async function registerUser(){if(!sb){authMessage('Supabase is not configured yet.',true);return}const email=$('authEmail').value.trim(),password=$('authPassword').value;if(!email||password.length<6){authMessage('Enter a valid email and password of at least 6 characters.',true);return}authMessage('Creating account...');const {data,error}=await sb.auth.signUp({email,password});if(error){authMessage(error.message,true);return}if(data.session)await onSignedIn(data.user);else authMessage('Account created. Check your email to confirm, then login.')}
+async function resetPassword(){if(!sb)return authMessage('Supabase is not configured yet.',true);const email=$('authEmail').value.trim();if(!email)return authMessage('Enter your email first.',true);authMessage('Sending password reset email...');const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});authMessage(error?error.message:'Password reset email sent. Check your inbox and open the reset link.')}
+function openPasswordModal(mode='change'){const m=$('passwordModal');if(!m)return;$('newPassword').value='';$('confirmPassword').value='';$('passwordMsg').textContent='';$('passwordMsg').style.color='#166534';const recovery=mode==='recovery';$('passwordModalTitle').textContent=recovery?'🔑 Set New Password':'🔐 Change Password';$('passwordModalHelp').textContent=recovery?'Set a new password to finish recovering your account.':'Choose a new password for your account.';m.classList.add('show');m.setAttribute('aria-hidden','false');setTimeout(()=>$('newPassword').focus(),80)}
+function closePasswordModal(){const m=$('passwordModal');if(!m)return;m.classList.remove('show');m.setAttribute('aria-hidden','true')}
+async function saveNewPassword(){if(!sb)return;const p=$('newPassword').value,c=$('confirmPassword').value;if(p.length<6){$('passwordMsg').textContent='Password must be at least 6 characters.';$('passwordMsg').style.color='#dc2626';return}if(p!==c){$('passwordMsg').textContent='Passwords do not match.';$('passwordMsg').style.color='#dc2626';return}$('passwordMsg').textContent='Updating password...';$('passwordMsg').style.color='#2563eb';const {error}=await sb.auth.updateUser({password:p});if(error){$('passwordMsg').textContent=error.message;$('passwordMsg').style.color='#dc2626';return}closePasswordModal();toast('Password updated successfully');const {data:{user}}=await sb.auth.getUser();if(user&&!currentUser)await onSignedIn(user);else if(user)currentUser=user; }
+async function googleLogin(){
+  if(!sb)return authMessage('Supabase is not configured yet.',true);
+  authMessage('Opening Google sign-in...');
+  const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.href}});
+  if(error)authMessage(error.message,true);
+}
+let pendingPhoneNumber='';
+function openPhoneModal(){
+  const modal=document.getElementById('phoneLoginModal');
+  if(!modal)return;
+  document.getElementById('phoneStepNumber').classList.add('active');
+  document.getElementById('phoneStepOtp').classList.remove('active');
+  document.getElementById('phoneModalError').textContent='';
+  document.getElementById('phoneNumberInput').value=pendingPhoneNumber||'';
+  document.getElementById('phoneOtpInput').value='';
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
+  setTimeout(()=>document.getElementById('phoneNumberInput').focus(),80);
+}
+function closePhoneModal(){
+  const modal=document.getElementById('phoneLoginModal');
+  if(!modal)return;
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden','true');
+}
+function phoneModalError(message){document.getElementById('phoneModalError').textContent=message||'';}
+function backToPhoneNumber(){
+  document.getElementById('phoneStepOtp').classList.remove('active');
+  document.getElementById('phoneStepNumber').classList.add('active');
+  phoneModalError('');
+  setTimeout(()=>document.getElementById('phoneNumberInput').focus(),50);
+}
+async function sendPhoneOtp(){
+  if(!sb){phoneModalError('Supabase is not configured yet.');return;}
+  const phone=document.getElementById('phoneNumberInput').value.trim();
+  if(!/^\+[1-9]\d{7,14}$/.test(phone)){phoneModalError('Enter a valid phone number with country code.');return;}
+  phoneModalError('Sending OTP...');
+  const {error}=await sb.auth.signInWithOtp({phone});
+  if(error){phoneModalError(error.message);return;}
+  pendingPhoneNumber=phone;
+  document.getElementById('phoneStepNumber').classList.remove('active');
+  document.getElementById('phoneStepOtp').classList.add('active');
+  document.getElementById('phoneOtpHint').textContent='Enter the OTP sent to '+phone+'.';
+  phoneModalError('');
+  setTimeout(()=>document.getElementById('phoneOtpInput').focus(),50);
+}
+async function verifyPhoneOtp(){
+  if(!sb){phoneModalError('Supabase is not configured yet.');return;}
+  const otp=document.getElementById('phoneOtpInput').value.trim();
+  if(!/^\d{4,8}$/.test(otp)){phoneModalError('Enter the OTP you received.');return;}
+  phoneModalError('Verifying...');
+  const {data,error}=await sb.auth.verifyOtp({phone:pendingPhoneNumber,token:otp,type:'sms'});
+  if(error){phoneModalError(error.message);return;}
+  closePhoneModal();
+  if(data.user)await onSignedIn(data.user);
+}
+function phoneLogin(){
+  if(!sb){authMessage('Supabase is not configured yet.',true);return;}
+  openPhoneModal();
+}
+window.addEventListener('keydown',(e)=>{if(e.key==='Escape'){closePhoneModal();closePasswordModal();}});
+let accountStatusTimer=null;
+async function checkMyAccountStatus(){
+  if(!sb||!currentUser)return;
+  try{const {data,error}=await sb.rpc('rj_get_my_account_status');if(error)throw error;if(data?.disabled){if(accountStatusTimer)clearInterval(accountStatusTimer);accountStatusTimer=null;alert('Your account has been disabled by the administrator.');await sb.auth.signOut();location.reload();}}catch(e){console.debug('Account status check:',e.message)}
+}
+async function adminRequest(action,userId){
+  if(!sb||!currentUser)return;
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session)throw new Error('Admin session is not ready.');
+  const res=await fetch(SUPABASE_URL+'/functions/v1/admin-user-management',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+session.access_token,'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify({action,user_id:userId})});
+  const data=await res.json().catch(()=>({}));
+  if(!res.ok)throw new Error(data.error||'Admin request failed');
+  return data;
+}
+async function loadAdminUsers(){
+  try{
+    $('adminMsg').textContent='Loading users...';
+    const data=await adminRequest('list_users');
+    const rows=data.users||[];
+    $('adminUsersTable').innerHTML=rows.map(u=>{const banned=!!u.banned_until&&new Date(u.banned_until)>new Date();const created=u.created_at?new Date(u.created_at).toLocaleString():'';const last=u.last_sign_in_at?new Date(u.last_sign_in_at).toLocaleString():'Never';return `<tr><td><b>${esc(u.email||u.phone||'(no email)')}</b><br><span class="muted">${esc(u.id)}</span></td><td>${esc(created)}</td><td>${esc(last)}</td><td>${banned?'<b style="color:#dc2626">Disabled</b>':'<b style="color:#059669">Active</b>'}</td><td><button class="btn small ${banned?'green':'red'}" onclick="toggleAdminUser('${u.id}',${banned})">${banned?'Enable':'Disable'}</button></td></tr>`}).join('')||'<tr><td colspan="5">No users found.</td></tr>';
+    $('adminMsg').textContent=`${rows.length} account(s) found.`;
+  }catch(e){$('adminMsg').textContent='Admin access error: '+e.message;alert('Admin: '+e.message)}
+}
+async function toggleAdminUser(userId,isBanned){
+  const action=isBanned?'enable_user':'disable_user';
+  if(!confirm(`Are you sure you want to ${action} this account?`))return;
+  try{await adminRequest(action,userId);toast(`Account ${isBanned ? 'enabled' : 'disabled'}`);loadAdminUsers();}catch(e){alert('Admin: '+e.message)}
+}
+async function onSignedIn(user){
+  // Hard user boundary: invalidate any pending writes from the previous account.
+  cloudEpoch++;
+  currentUser=user;
+  activeUserId=user.id;
+  activateUserStorage(user.id);
+  resetRuntimeState();
+  authReady=true;
+  setAppVisible(true);
+  authMessage('');
+  document.body.dataset.userEmail=user.email||'';
+  if(accountStatusTimer)clearInterval(accountStatusTimer);
+  await checkMyAccountStatus();
+  accountStatusTimer=setInterval(checkMyAccountStatus,15000);
+  // Admin navigation is enabled only after the secure admin function confirms authorization.
+  const adminBtn=Array.from(nav.children).find(b=>b.textContent.includes('Admin'));
+  if(adminBtn)adminBtn.style.display='none';
+  try{const r=await adminRequest('check');if(r?.is_admin&&adminBtn){adminBtn.style.display='';adminBtn.onclick=()=>{showPanel('adminPanel',adminBtn);loadAdminUsers();};}}catch(e){console.debug('Not an admin or admin function not configured yet.');}
+
+  try{
+    clearCurrentUserLocal();
+    await cloudLoadAll(user.id);
+      if(user.id!==activeUserId)return;
+    document.body.dataset.user=user.id;
+    window.__rjCloudReady=true;
+    loadSettingsUI();resetInvoiceForm();resetQuotation();updateDashboard();ensureCustomerList();ensureProductList();showPanel('dashboardPanel');
+  }catch(e){
+    console.error(e);
+    if(user.id===activeUserId){setEmptyUserLocal();toast('Cloud sync issue: '+e.message);showPanel('dashboardPanel')}
+  }
+  $('authEmail').value='';$('authPassword').value=''
+}
+async function logoutUser(){if(accountStatusTimer)clearInterval(accountStatusTimer);accountStatusTimer=null;cloudEpoch++;activeUserId=null;subscriptionInfo={plan:'free',status:'active',free_invoice_limit:3,free_invoice_used:0};window.__rjCloudReady=false;currentUser=null;authReady=false;resetRuntimeState();if(sb)await sb.auth.signOut();setAppVisible(false);location.reload()}
+async function initAuth(){try{if(SUPABASE_URL.startsWith('PASTE_')||SUPABASE_PUBLISHABLE_KEY.startsWith('PASTE_')){setAppVisible(false);authMessage('Supabase setup required: add Project URL + Publishable key.',true);return}sb=supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);const {data}=await sb.auth.getSession();if(data.session)await onSignedIn(data.session.user);else setAppVisible(false);sb.auth.onAuthStateChange(async (event,session)=>{if(event==='SIGNED_IN'&&session&&!currentUser)await onSignedIn(session.user);if(event==='PASSWORD_RECOVERY'&&session){setAppVisible(false);openPasswordModal('recovery')}if(event==='SIGNED_OUT'){currentUser=null;setAppVisible(false)}})}catch(e){console.error(e);setAppVisible(false);authMessage('Authentication setup error: '+e.message,true)}}
+</script>
+<script>
+const DEFAULT_LOGO='rj-tech-logo.png';
+const KEYS={invoices:'rj_v3_invoices',quotes:'rj_v3_quotes',customers:'rj_v3_customers',products:'rj_v3_products',settings:'rj_v3_settings',seq:'rj_v3_sequences'};
+const navItems=[['dashboardPanel','🏠 Dashboard'],['invoicePanel','🧾 Invoice'],['invoiceHistoryPanel','📁 Invoice History'],['quotationPanel','📋 Quotation'],['quotationHistoryPanel','📁 Quote History'],['customersPanel','👥 Customers'],['productsPanel','🧰 Items'],['toolsPanel','🧮 Tools'],['settingsPanel','⚙️ Settings'],['appInfoPanel','ℹ️ About'],['adminPanel','🛡️ Admin']];
+const nav=document.getElementById('nav');
+navItems.forEach(([id,label])=>{const b=document.createElement('button');b.textContent=label;b.onclick=()=>showPanel(id,b);nav.appendChild(b)});
+function $(id){return document.getElementById(id)}
+function safeParse(key,fallback=[]){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback))}catch(e){return fallback}}
+function write(key,value){try{if(!currentUser||!activeUserId||!window.__rjCloudReady)throw new Error('Account session is not ready.');localStorage.setItem(key,JSON.stringify(value));const base=key===KEYS.invoices?'invoices':key===KEYS.quotes?'quotes':key===KEYS.customers?'customers':key===KEYS.products?'products':key===KEYS.settings?'settings':key===KEYS.seq?'seq':null;if(base)cloudSave(base,value,activeUserId,cloudEpoch);return true}catch(e){alert(e.message==='Account session is not ready.'?e.message:'Storage limit reached. Export a backup and use smaller images.');return false}}
+function money(n){return Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function esc(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function today(){return new Date().toISOString().slice(0,10)}
+function year(){return new Date().getFullYear()}
+function uid(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),2200)}
+function getSettings(){return Object.assign({company:'RJ TECH Solutions',address:'Pune, Maharashtra',phone:'',email:'',gstin:'',tax:18,logo:'',signature:''},safeParse(KEYS.settings,{}))}
+function saveSettings(){const s={company:$('setCompany').value.trim()||'RJ TECH Solutions',address:$('setAddress').value.trim(),phone:$('setPhone').value.trim(),email:$('setEmail').value.trim(),gstin:$('setGSTIN').value.trim(),tax:+$('setTax').value||18,logo:$('setLogoData').value||'',signature:$('setSignatureData').value||''};if(write(KEYS.settings,s)){toast('Business settings saved');resetInvoiceForm();resetQuotation()}}
+function loadImage(input,targetId,context){const f=input.files&&input.files[0];if(!f)return;if(!f.type.startsWith('image/')){alert('Please select an image file.');input.value='';return}const r=new FileReader();r.onload=e=>{$(targetId).value=e.target.result;if(context==='invoice')renderInvoicePreview();if(context==='quote')renderQuotationPreview()};r.readAsDataURL(f)}
+function sequences(){return safeParse(KEYS.seq,{})}
+function nextNumber(prefix,key){
+ const list=safeParse(key,[]); const s=sequences(); let n=Number(s[prefix]||0)+1;
+ const used=new Set(list.map(x=>String(x.no||'')));
+ while(used.has(prefix+'-'+year()+'-'+String(n).padStart(3,'0'))) n++;
+ return prefix+'-'+year()+'-'+String(n).padStart(3,'0');
+}
+function advanceSequence(prefix,number){const m=String(number).match(/-(\d+)$/);if(!m)return;const s=sequences();s[prefix]=Math.max(Number(s[prefix]||0),Number(m[1]));write(KEYS.seq,s)}
+function showPanel(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');nav.querySelectorAll('button').forEach(q=>q.classList.remove('active'));if(btn)btn.classList.add('active');else{const i=navItems.findIndex(x=>x[0]===id);if(i>=0)nav.children[i].classList.add('active')}if(id==='dashboardPanel')updateDashboard();if(id==='invoiceHistoryPanel')renderInvoiceHistory();if(id==='quotationHistoryPanel')renderQuotationHistory();if(id==='customersPanel')renderCustomers();if(id==='productsPanel')renderProducts();if(id==='settingsPanel')loadSettingsUI()}
+let rows=[],qRows=[];let editingInvoiceId=null,editingQuoteId=null;
+function blankRows(){return[{d:'Computer Service',q:1,r:1000}]}
+function blankQRows(){return[{d:'Computer / IT Service',q:1,r:1000}]}
+function addItem(){rows.push({d:'',q:1,r:0});renderRows();renderInvoicePreview()}
+function delItem(i){rows.splice(i,1);if(!rows.length)rows=blankRows();renderRows();renderInvoicePreview()}
+function renderRows(){$('items').innerHTML=rows.map((x,i)=>`<div class="item"><input value="${esc(x.d)}" list="productList" placeholder="Item / Service" oninput="rows[${i}].d=this.value;renderInvoicePreview()"><input type="number" min="0" value="${x.q}" oninput="rows[${i}].q=+this.value||0;renderInvoicePreview()"><input type="number" min="0" value="${x.r}" oninput="rows[${i}].r=+this.value||0;renderInvoicePreview()"><input readonly value="${money((+x.q||0)*(+x.r||0))}"><button class="btn red" onclick="delItem(${i})">×</button></div>`).join('');ensureProductList()}
+function addQItem(){qRows.push({d:'',q:1,r:0});renderQRows();renderQuotationPreview()}
+function delQItem(i){qRows.splice(i,1);if(!qRows.length)qRows=blankQRows();renderQRows();renderQuotationPreview()}
+function renderQRows(){$('qItems').innerHTML=qRows.map((x,i)=>`<div class="item"><input value="${esc(x.d)}" list="productList" placeholder="Item / Service" oninput="qRows[${i}].d=this.value;renderQuotationPreview()"><input type="number" min="0" value="${x.q}" oninput="qRows[${i}].q=+this.value||0;renderQuotationPreview()"><input type="number" min="0" value="${x.r}" oninput="qRows[${i}].r=+this.value||0;renderQuotationPreview()"><input readonly value="${money((+x.q||0)*(+x.r||0))}"><button class="btn red" onclick="delQItem(${i})">×</button></div>`).join('');ensureProductList()}
+function ensureProductList(){let dl=$('productList');if(!dl){dl=document.createElement('datalist');dl.id='productList';document.body.appendChild(dl)}dl.innerHTML=safeParse(KEYS.products,[]).map(x=>`<option value="${esc(x.name)}">${esc(x.rate)}</option>`).join('')}
+function totals(list,discId,taxId){const sub=list.reduce((s,x)=>s+(+x.q||0)*(+x.r||0),0),disc=Math.min(sub,+$(discId).value||0),taxable=sub-disc,rate=+$(taxId).value||0,tax=taxable*rate/100;return{sub,disc,taxable,rate,tax,total:taxable+tax}}
+function taxHTML(t,type){return type==='split'?`<div class="sumrow"><span>CGST (${money(t.rate/2)}%)</span><b>₹${money(t.tax/2)}</b></div><div class="sumrow"><span>SGST (${money(t.rate/2)}%)</span><b>₹${money(t.tax/2)}</b></div>`:type==='igst'?`<div class="sumrow"><span>IGST (${money(t.rate)}%)</span><b>₹${money(t.tax)}</b></div>`:`<div class="sumrow"><span>GST (${money(t.rate)}%)</span><b>₹${money(t.tax)}</b></div>`}
+function amountWords(n){n=Math.round(Number(n||0));if(n===0)return'Zero Rupees Only';const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];function w(x){if(x<20)return ones[x];if(x<100)return tens[Math.floor(x/10)]+(x%10?' '+ones[x%10]:'');if(x<1000)return ones[Math.floor(x/100)]+' Hundred'+(x%100?' '+w(x%100):'');if(x<100000)return w(Math.floor(x/1000))+' Thousand'+(x%1000?' '+w(x%1000):'');if(x<10000000)return w(Math.floor(x/100000))+' Lakh'+(x%100000?' '+w(x%100000):'');return w(Math.floor(x/10000000))+' Crore'+(x%10000000?' '+w(x%10000000):'')}return w(n)+' Rupees Only'}
+function invoiceHTML(){const t=totals(rows,'discount','tax'),type=$('taxType').value,received=Math.max(0,+$('received').value||0),balance=Math.max(0,t.total-received),trs=rows.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.d)||'-'}</td><td class="num">${x.q}</td><td class="num">₹${money(x.r)}</td><td class="num">₹${money((+x.q||0)*(+x.r||0))}</td></tr>`).join('');const s=getSettings();const logo=$('logoData').value||s.logo||DEFAULT_LOGO;return `<div class="inv-head"><div>${logo?`<img class="signimg" style="display:block;max-width:150px;max-height:65px;margin-bottom:8px" src="${logo}">`:''}<div class="brand">${esc($('company').value)||'Business Name'}</div><div class="small">${esc($('companyAddress').value)}<br>${esc($('companyPhone').value)}<br>${esc($('companyEmail').value)}<br>${$('companyGSTIN').value?'GSTIN: '+esc($('companyGSTIN').value):''}</div></div><div class="right"><h3>INVOICE</h3><b>${esc($('invoiceNo').value)}</b><div class="small">${esc($('invoiceDate').value)}</div><span class="badge">${esc($('status').value)}</span></div></div>
+<div class="parties"><div><div class="label">Bill To</div><b>${esc($('customer').value)||'Customer Name'}</b><div class="small">${esc($('customerAddress').value)}<br>${esc($('customerPhone').value)}<br>${$('customerGSTIN').value?'GSTIN: '+esc($('customerGSTIN').value):''}</div></div><div><div class="label">Payment</div><b>${esc($('status').value)}</b><div class="small">Method: ${esc($('paymentMethod').value)}<br>Received: ₹${money(received)}<br>Balance Due: ₹${money(balance)}${$('dueDate').value?'<br>Due Date: '+esc($('dueDate').value):''}</div></div></div>
+<table class="inv-table"><thead><tr><th>#</th><th>Description</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${trs}</tbody></table>
+<div class="summary"><div class="sumrow"><span>Subtotal</span><b>₹${money(t.sub)}</b></div><div class="sumrow"><span>Discount</span><b>- ₹${money(t.disc)}</b></div><div class="sumrow"><span>Taxable Amount</span><b>₹${money(t.taxable)}</b></div>${taxHTML(t,type)}<div class="sumrow total"><span>Grand Total</span><b>₹${money(t.total)}</b></div><div class="sumrow"><span>Received</span><b>₹${money(received)}</b></div><div class="sumrow"><span>Balance Due</span><b>₹${money(balance)}</b></div></div>
+<div style="margin-top:15px;font-size:12px"><b>Amount in Words:</b> ${esc(amountWords(t.total))}</div><div class="footer-note"><b>Terms / Notes</b><br>${esc($('notes').value)||'Thank you for your business.'}</div>
+<div class="signbox">${$('signatureData').value?`<img class="signimg" src="${$('signatureData').value}"><div style="border-top:1px solid #111827;width:180px;margin:5px 0 0 auto"></div>`:`<div style="height:65px"></div><div style="border-top:1px solid #111827;width:180px;margin:5px 0 0 auto"></div>`}<b>Authorized Signature</b></div>`}
+function renderInvoicePreview(){$('invoice').innerHTML=invoiceHTML();renderRowsTotalsOnly()}
+function renderRowsTotalsOnly(){document.querySelectorAll('#items .item').forEach((el,i)=>{const inp=el.querySelectorAll('input');if(inp[3])inp[3].value=money((+rows[i]?.q||0)*(+rows[i]?.r||0))})}
+function invoiceData(){const t=totals(rows,'discount','tax');return{id:editingInvoiceId||uid(),no:$('invoiceNo').value,date:$('invoiceDate').value,company:$('company').value,companyAddress:$('companyAddress').value,companyPhone:$('companyPhone').value,companyEmail:$('companyEmail').value,companyGSTIN:$('companyGSTIN').value,status:$('status').value,customer:$('customer').value,customerPhone:$('customerPhone').value,customerAddress:$('customerAddress').value,customerGSTIN:$('customerGSTIN').value,rows:structuredClone(rows),discount:t.disc,taxRate:t.rate,taxType:$('taxType').value,received:+$('received').value||0,paymentMethod:$('paymentMethod').value,dueDate:$('dueDate').value,notes:$('notes').value,logo:$('logoData').value,signature:$('signatureData').value,total:t.total,savedAt:new Date().toISOString()}}
+async function saveInvoice(){try{const d=invoiceData(),list=safeParse(KEYS.invoices,[]),idx=list.findIndex(x=>x.id===d.id);if(!d.no){alert('Invoice number is missing. Click New Invoice.');return}if(idx>=0){list[idx]=d}else{if(list.some(x=>x.no===d.no)){d.no=nextNumber('INV',KEYS.invoices);$('invoiceNo').value=d.no}list.push(d)}if(!write(KEYS.invoices,list))return;advanceSequence('INV',d.no);const savedNo=d.no;resetInvoiceForm();$('saveMsg').textContent=`✓ ${savedNo} saved. New invoice ${$('invoiceNo').value} is ready.`;toast(`${savedNo} saved • ${$('invoiceNo').value} ready`);updateDashboard()}catch(e){const msg=String(e?.message||e);alert('Invoice save failed: '+msg)}}
+function fillInvoice(x){editingInvoiceId=x.id||null;Object.entries({invoiceNo:x.no,invoiceDate:x.date,company:x.company,companyAddress:x.companyAddress,companyPhone:x.companyPhone,companyEmail:x.companyEmail,companyGSTIN:x.companyGSTIN,status:x.status,customer:x.customer,customerPhone:x.customerPhone,customerAddress:x.customerAddress,customerGSTIN:x.customerGSTIN,discount:x.discount,tax:x.taxRate,taxType:x.taxType||'split',received:x.received||0,paymentMethod:x.paymentMethod||'Cash',dueDate:x.dueDate||'',notes:x.notes||'',logoData:x.logo||'',signatureData:x.signature||''}).forEach(([id,v])=>$(id).value=v);rows=structuredClone(x.rows||blankRows());renderRows();renderInvoicePreview()}
+function resetInvoiceForm(){const s=getSettings();editingInvoiceId=null;rows=blankRows();$('company').value=s.company;$('companyAddress').value=s.address;$('companyPhone').value=s.phone;$('companyEmail').value=s.email;$('companyGSTIN').value=s.gstin;$('tax').value=s.tax;$('invoiceDate').value=today();$('invoiceNo').value=nextNumber('INV',KEYS.invoices);$('status').value='PAID';['customer','customerPhone','customerAddress','customerGSTIN','notes'].forEach(id=>$(id).value='');$('discount').value=0;$('taxType').value='split';$('received').value=0;$('paymentMethod').value='UPI';$('dueDate').value='';$('logoData').value=s.logo||'';$('signatureData').value=s.signature||'';$('logoUpload').value='';$('signatureUpload').value='';renderRows();renderInvoicePreview();$('saveMsg').textContent='New invoice ready.'}
+function newInvoice(){resetInvoiceForm();showPanel('invoicePanel');toast('New invoice number generated')}
+function loadInvoice(i){const x=safeParse(KEYS.invoices,[])[i];if(!x)return;fillInvoice(x);$('saveMsg').textContent=`Loaded ${x.no}. Saving will update this invoice.`;showPanel('invoicePanel')}
+function deleteInvoice(i){if(!confirm('Delete this invoice from history?'))return;const l=safeParse(KEYS.invoices,[]);l.splice(i,1);write(KEYS.invoices,l);renderInvoiceHistory();updateDashboard();toast('Invoice deleted')}
+function duplicateInvoice(i){const x=safeParse(KEYS.invoices,[])[i];if(!x)return;fillInvoice(Object.assign({},structuredClone(x),{id:null,no:nextNumber('INV',KEYS.invoices),date:today(),savedAt:null}));editingInvoiceId=null;$('saveMsg').textContent='Duplicate created. Save it to history.';showPanel('invoicePanel')}
+function renderInvoiceHistory(){let l=safeParse(KEYS.invoices,[]),q=($('invoiceSearch')?.value||'').toLowerCase();l=l.map((x,i)=>({...x,_i:i})).filter(x=>(x.no+' '+x.customer+' '+x.status).toLowerCase().includes(q)).reverse();$('invoiceHistory').innerHTML=l.length?l.map(x=>`<div class="history-row"><div class="history-main"><b>${esc(x.no)} • ${esc(x.customer||'No customer')}</b><span>${esc(x.date)} • ₹${money(x.total)} • ${esc(x.status)}</span></div><div class="history-actions"><button class="btn small" onclick="loadInvoice(${x._i})">Open</button><button class="btn small light" onclick="duplicateInvoice(${x._i})">Duplicate</button><button class="btn small red" onclick="deleteInvoice(${x._i})">Delete</button></div></div>`).join(''):'<div class="empty">No saved invoices yet.</div>'}
+
+function quoteHTML(){const t=totals(qRows,'qDiscount','qTax'),type=$('qTaxType').value,trs=qRows.map((x,i)=>`<tr><td>${i+1}</td><td>${esc(x.d)||'-'}</td><td class="num">${x.q}</td><td class="num">₹${money(x.r)}</td><td class="num">₹${money((+x.q||0)*(+x.r||0))}</td></tr>`).join(''),s=getSettings(),logo=$('qLogoData').value||s.logo||DEFAULT_LOGO;return `<div class="inv-head"><div>${logo?`<img class="signimg" style="display:block;max-width:150px;max-height:65px;margin-bottom:8px" src="${logo}">`:''}<div class="brand">${esc($('qCompany').value)||'Business Name'}</div><div class="small">${esc($('qCompanyAddress').value)}<br>${esc($('qCompanyPhone').value)}<br>${esc($('qCompanyEmail').value)}<br>${$('qCompanyGSTIN').value?'GSTIN: '+esc($('qCompanyGSTIN').value):''}</div></div><div class="right"><h3>QUOTATION</h3><b>${esc($('quoteNo').value)}</b><div class="small">${esc($('quoteDate').value)}<br>Valid until: ${esc($('validUntil').value)}</div></div></div>
+<div class="parties"><div><div class="label">Quote For</div><b>${esc($('qCustomer').value)||'Customer Name'}</b><div class="small">${esc($('qCustomerAddress').value)}<br>${esc($('qCustomerPhone').value)}<br>${$('qCustomerGSTIN').value?'GSTIN: '+esc($('qCustomerGSTIN').value):''}</div></div><div><div class="label">Quotation</div><b>${esc($('quoteNo').value)}</b><div class="small">Date: ${esc($('quoteDate').value)}<br>Valid Until: ${esc($('validUntil').value)}</div></div></div>
+<table class="inv-table"><thead><tr><th>#</th><th>Description</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">Amount</th></tr></thead><tbody>${trs}</tbody></table>
+<div class="summary"><div class="sumrow"><span>Subtotal</span><b>₹${money(t.sub)}</b></div><div class="sumrow"><span>Discount</span><b>- ₹${money(t.disc)}</b></div><div class="sumrow"><span>Taxable Amount</span><b>₹${money(t.taxable)}</b></div>${taxHTML(t,type)}<div class="sumrow total"><span>Estimated Total</span><b>₹${money(t.total)}</b></div></div>
+<div style="margin-top:15px;font-size:12px"><b>Amount in Words:</b> ${esc(amountWords(t.total))}</div><div class="footer-note"><b>Terms / Notes</b><br>${esc($('qNotes').value)||'Quotation valid until the date mentioned above.'}</div>
+<div class="signbox">${$('qSignatureData').value?`<img class="signimg" src="${$('qSignatureData').value}"><div style="border-top:1px solid #111827;width:180px;margin:5px 0 0 auto"></div>`:`<div style="height:65px"></div><div style="border-top:1px solid #111827;width:180px;margin:5px 0 0 auto"></div>`}<b>Authorized Signature</b></div>`}
+function renderQuotationPreview(){$('quotation').innerHTML=quoteHTML();document.querySelectorAll('#qItems .item').forEach((el,i)=>{const inp=el.querySelectorAll('input');if(inp[3])inp[3].value=money((+qRows[i]?.q||0)*(+qRows[i]?.r||0))})}
+function quoteData(){const t=totals(qRows,'qDiscount','qTax');return{id:editingQuoteId||uid(),no:$('quoteNo').value,date:$('quoteDate').value,validUntil:$('validUntil').value,company:$('qCompany').value,companyAddress:$('qCompanyAddress').value,companyPhone:$('qCompanyPhone').value,companyEmail:$('qCompanyEmail').value,companyGSTIN:$('qCompanyGSTIN').value,customer:$('qCustomer').value,customerPhone:$('qCustomerPhone').value,customerAddress:$('qCustomerAddress').value,customerGSTIN:$('qCustomerGSTIN').value,rows:structuredClone(qRows),discount:t.disc,taxRate:t.rate,taxType:$('qTaxType').value,notes:$('qNotes').value,logo:$('qLogoData').value,signature:$('qSignatureData').value,total:t.total,savedAt:new Date().toISOString()}}
+function saveQuotation(){try{const d=quoteData(),l=safeParse(KEYS.quotes,[]),idx=l.findIndex(x=>x.id===d.id);if(!d.no){alert('Quotation number is missing. Click New Quotation.');return}if(idx>=0){l[idx]=d}else{if(l.some(x=>x.no===d.no)){d.no=nextNumber('QTN',KEYS.quotes);$('quoteNo').value=d.no}l.push(d)}if(!write(KEYS.quotes,l))return;advanceSequence('QTN',d.no);const savedNo=d.no;resetQuotation();$('quoteMsg').textContent=`✓ ${savedNo} saved. New quotation ${$('quoteNo').value} is ready.`;toast(`${savedNo} saved • ${$('quoteNo').value} ready`);updateDashboard()}catch(e){alert('Quotation save failed: '+e.message)}}
+function resetQuotation(){const s=getSettings();editingQuoteId=null;qRows=blankQRows();$('qCompany').value=s.company;$('qCompanyAddress').value=s.address;$('qCompanyPhone').value=s.phone;$('qCompanyEmail').value=s.email;$('qCompanyGSTIN').value=s.gstin;$('qTax').value=s.tax;$('quoteDate').value=today();let d=new Date();d.setDate(d.getDate()+15);$('validUntil').value=d.toISOString().slice(0,10);$('quoteNo').value=nextNumber('QTN',KEYS.quotes);$('qCustomer').value='';$('qCustomerPhone').value='';$('qCustomerAddress').value='';$('qCustomerGSTIN').value='';$('qDiscount').value=0;$('qTaxType').value='split';$('qNotes').value='';$('qLogoData').value=s.logo||'';$('qSignatureData').value=s.signature||'';$('qLogoUpload').value='';$('qSignatureUpload').value='';renderQRows();renderQuotationPreview();$('quoteMsg').textContent='New quotation ready.'}
+function newQuotation(){resetQuotation();showPanel('quotationPanel');toast('New quotation number generated')}
+function fillQuotation(x){editingQuoteId=x.id||null;Object.entries({quoteNo:x.no,quoteDate:x.date,validUntil:x.validUntil,qCompany:x.company,qCompanyAddress:x.companyAddress,qCompanyPhone:x.companyPhone,qCompanyEmail:x.companyEmail,qCompanyGSTIN:x.companyGSTIN,qCustomer:x.customer,qCustomerPhone:x.customerPhone,qCustomerAddress:x.customerAddress,qCustomerGSTIN:x.customerGSTIN,qDiscount:x.discount,qTax:x.taxRate,qTaxType:x.taxType||'split',qNotes:x.notes||'',qLogoData:x.logo||'',qSignatureData:x.signature||''}).forEach(([id,v])=>$(id).value=v);qRows=structuredClone(x.rows||blankQRows());renderQRows();renderQuotationPreview()}
+function loadQuotation(i){const x=safeParse(KEYS.quotes,[])[i];if(!x)return;fillQuotation(x);$('quoteMsg').textContent=`Loaded ${x.no}. Saving will update this quotation.`;showPanel('quotationPanel')}
+function deleteQuotation(i){if(!confirm('Delete this quotation from history?'))return;const l=safeParse(KEYS.quotes,[]);l.splice(i,1);write(KEYS.quotes,l);renderQuotationHistory();updateDashboard();toast('Quotation deleted')}
+function duplicateQuotation(i){const x=safeParse(KEYS.quotes,[])[i];if(!x)return;fillQuotation(Object.assign({},structuredClone(x),{id:null,no:nextNumber('QTN',KEYS.quotes),date:today()}));editingQuoteId=null;$('quoteMsg').textContent='Duplicate created. Save it to history.';showPanel('quotationPanel')}
+function convertQuoteToInvoice(i){const x=safeParse(KEYS.quotes,[])[i];if(!x)return;resetInvoiceForm();$('customer').value=x.customer||'';$('customerPhone').value=x.customerPhone||'';$('customerAddress').value=x.customerAddress||'';$('customerGSTIN').value=x.customerGSTIN||'';rows=structuredClone(x.rows||blankRows());$('discount').value=x.discount||0;$('tax').value=x.taxRate||getSettings().tax;$('taxType').value=x.taxType||'split';$('notes').value=x.notes||'';$('logoData').value=x.logo||getSettings().logo||'';$('signatureData').value=x.signature||getSettings().signature||'';renderRows();renderInvoicePreview();showPanel('invoicePanel');toast('Quotation converted to new invoice')}
+function renderQuotationHistory(){let l=safeParse(KEYS.quotes,[]),q=($('quoteSearch')?.value||'').toLowerCase();l=l.map((x,i)=>({...x,_i:i})).filter(x=>(x.no+' '+x.customer).toLowerCase().includes(q)).reverse();$('quotationHistory').innerHTML=l.length?l.map(x=>`<div class="history-row"><div class="history-main"><b>${esc(x.no)} • ${esc(x.customer||'No customer')}</b><span>${esc(x.date)} • ₹${money(x.total)} • Valid until ${esc(x.validUntil||'-')}</span></div><div class="history-actions"><button class="btn small" onclick="loadQuotation(${x._i})">Open</button><button class="btn small light" onclick="duplicateQuotation(${x._i})">Duplicate</button><button class="btn small blue" onclick="convertQuoteToInvoice(${x._i})">To Invoice</button><button class="btn small red" onclick="deleteQuotation(${x._i})">Delete</button></div></div>`).join(''):'<div class="empty">No saved quotations yet.</div>'}
+
+function saveCustomer(){const name=$('custName').value.trim();if(!name){alert('Enter customer name');return}let l=safeParse(KEYS.customers,[]),x={id:uid(),name,phone:$('custPhone').value,address:$('custAddress').value,gstin:$('custGSTIN').value,email:$('custEmail').value};const old=l.findIndex(a=>a.name.toLowerCase()===name.toLowerCase());if(old>=0){x.id=l[old].id;l[old]=x}else l.push(x);write(KEYS.customers,l);renderCustomers();ensureCustomerList();clearCustomerForm();toast('Customer saved')}
+function renderCustomers(){const l=safeParse(KEYS.customers,[]);$('customerTable').innerHTML=l.length?l.map((x,i)=>`<tr><td>${esc(x.name)}</td><td>${esc(x.phone)}</td><td>${esc(x.gstin)}</td><td><button class="btn small" onclick="useCustomer(${i})">Use</button> <button class="btn small red" onclick="deleteCustomer(${i})">Delete</button></td></tr>`).join(''):'<tr><td colspan="4" class="muted">No customers saved.</td></tr>';ensureCustomerList()}
+function ensureCustomerList(){const l=safeParse(KEYS.customers,[]);$('customerList').innerHTML=l.map(x=>`<option value="${esc(x.name)}"></option>`).join('')}
+function useCustomer(i){const x=safeParse(KEYS.customers,[])[i];if(!x)return;$('customer').value=x.name;$('customerPhone').value=x.phone;$('customerAddress').value=x.address;$('customerGSTIN').value=x.gstin;showPanel('invoicePanel');renderInvoicePreview()}
+function suggestCustomer(v){const x=safeParse(KEYS.customers,[]).find(a=>a.name.toLowerCase()===v.toLowerCase());if(x){$('customerPhone').value=x.phone;$('customerAddress').value=x.address;$('customerGSTIN').value=x.gstin;renderInvoicePreview()}}
+function deleteCustomer(i){if(!confirm('Delete customer?'))return;let l=safeParse(KEYS.customers,[]);l.splice(i,1);write(KEYS.customers,l);renderCustomers()}
+function clearCustomerForm(){['custName','custPhone','custAddress','custGSTIN','custEmail'].forEach(id=>$(id).value='')}
+
+function saveProduct(){const name=$('prodName').value.trim();if(!name){alert('Enter item/service name');return}let l=safeParse(KEYS.products,[]),x={id:uid(),name,rate:+$('prodRate').value||0,unit:$('prodUnit').value||''};const old=l.findIndex(a=>a.name.toLowerCase()===name.toLowerCase());if(old>=0){x.id=l[old].id;l[old]=x}else l.push(x);write(KEYS.products,l);renderProducts();clearProductForm();toast('Item saved')}
+function renderProducts(){const l=safeParse(KEYS.products,[]);$('productTable').innerHTML=l.length?l.map((x,i)=>`<tr><td>${esc(x.name)}</td><td>${esc(x.unit)}</td><td>₹${money(x.rate)}</td><td><button class="btn small red" onclick="deleteProduct(${i})">Delete</button></td></tr>`).join(''):'<tr><td colspan="4" class="muted">No items saved.</td></tr>';ensureProductList()}
+function deleteProduct(i){let l=safeParse(KEYS.products,[]);l.splice(i,1);write(KEYS.products,l);renderProducts()}
+function clearProductForm(){['prodName','prodRate','prodUnit'].forEach(id=>$(id).value='')}
+
+function updateDashboard(){const a=safeParse(KEYS.invoices,[]),q=safeParse(KEYS.quotes,[]),c=safeParse(KEYS.customers,[]),p=safeParse(KEYS.products,[]);$('dashInvoices').textContent=a.length;$('dashInvoiceValue').textContent='₹'+money(a.reduce((s,x)=>s+(+x.total||0),0));$('dashQuotes').textContent=q.length;$('dashQuoteValue').textContent='₹'+money(q.reduce((s,x)=>s+(+x.total||0),0));const paid=a.filter(x=>x.status==='PAID').reduce((s,x)=>s+(+x.total||0),0),pending=a.filter(x=>x.status!=='PAID').reduce((s,x)=>s+(+x.total||0),0);$('snapshot').innerHTML=`<div class="snap-row"><span>💰 Paid</span><b>₹${money(paid)}</b></div><div class="snap-row"><span>⏳ Pending / Partial</span><b>₹${money(pending)}</b></div><div class="snap-row"><span>👥 Customers</span><b>${c.length}</b></div><div class="snap-row"><span>🧰 Items / Services</span><b>${p.length}</b></div>`;const recent=a.slice().sort((x,y)=>String(y.savedAt||y.date).localeCompare(String(x.savedAt||x.date))).slice(0,5);$('dashRecent').innerHTML=recent.length?recent.map(x=>`<div class="recent-row"><div><b>${esc(x.no)}</b><span>${esc(x.customer||'No customer')} • ${esc(x.date||'')}</span></div><strong>₹${money(x.total)}</strong></div>`).join(''):'<div class="empty">No invoices yet. Create your first invoice.</div>'}
+function gstCalc(){const a=+$('gstAmount').value||0,r=+$('gstRate').value||0,g=a*r/100;$('gstResult').innerHTML=`GST: ₹${money(g)}<br>Total: ₹${money(a+g)}`}
+function emiCalc(){const p=+$('emiP').value||0,r=(+$('emiR').value||0)/1200,n=+$('emiN').value||0;if(!p||!n){$('emiResult').textContent='Enter valid values.';return}const e=r?p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):p/n,total=e*n;$('emiResult').innerHTML=`Monthly EMI: ₹${money(e)}<br>Total Payment: ₹${money(total)}<br>Total Interest: ₹${money(total-p)}`}
+function profitCalc(){const c=+$('costPrice').value||0,s=+$('sellPrice').value||0;if(!c){$('profitResult').textContent='Enter cost price.';return}const p=s-c,margin=s?p/s*100:0,markup=p/c*100;$('profitResult').innerHTML=`Profit: ₹${money(p)}<br>Margin: ${money(margin)}%<br>Markup: ${money(markup)}%`}
+const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'],tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+function nwords(n){if(n===0)return'Zero';if(n<20)return ones[n];if(n<100)return tens[Math.floor(n/10)]+' '+ones[n%10];if(n<1000)return ones[Math.floor(n/100)]+' Hundred '+nwords(n%100);if(n<100000)return nwords(Math.floor(n/1000))+' Thousand '+nwords(n%1000);if(n<10000000)return nwords(Math.floor(n/100000))+' Lakh '+nwords(n%100000);return nwords(Math.floor(n/10000000))+' Crore '+nwords(n%10000000)}
+function wordsCalc(){let n=Math.floor(+$('numberInput').value||0);$('numberResult').textContent=n<1000000000?nwords(n):'Enter number below 1 billion'}
+function loadSettingsUI(){const s=getSettings();$('setCompany').value=s.company;$('setAddress').value=s.address;$('setPhone').value=s.phone;$('setEmail').value=s.email;$('setGSTIN').value=s.gstin;$('setTax').value=s.tax;$('setLogoData').value=s.logo||'';$('setSignatureData').value=s.signature||''}
+function exportBackup(){const data={version:3,exportedAt:new Date().toISOString(),invoices:safeParse(KEYS.invoices,[]),quotations:safeParse(KEYS.quotes,[]),customers:safeParse(KEYS.customers,[]),products:safeParse(KEYS.products,[]),settings:getSettings(),sequences:sequences()};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RJ_Pocket_Toolkit_Backup_'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);toast('Backup exported')}
+function importBackup(input){const f=input.files&&input.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!d||!Array.isArray(d.invoices)||!Array.isArray(d.quotations))throw new Error('Invalid backup');write(KEYS.invoices,d.invoices);write(KEYS.quotes,d.quotations);write(KEYS.customers,d.customers||[]);write(KEYS.products,d.products||[]);write(KEYS.settings,d.settings||getSettings());write(KEYS.seq,d.sequences||{});toast('Backup restored');setTimeout(()=>location.reload(),500)}catch(e){alert('Import failed: '+e.message)}};r.readAsText(f)}
+async function clearAllData(){if(!confirm('Delete ALL invoices, quotations, customers, items and settings from this account and device? This cannot be undone unless you have a backup.'))return;try{if(window.__rjCloudReady&&currentUser){const {error}=await sb.rpc('rj_delete_all_app_data_secure');if(error)throw error;}Object.values(KEYS).forEach(k=>localStorage.removeItem(k));toast('All app data deleted');setTimeout(()=>location.reload(),500)}catch(e){alert('Cloud delete failed: '+e.message)}}
+
+function wire(){
+['company','companyAddress','companyPhone','companyEmail','companyGSTIN','invoiceNo','invoiceDate','customer','customerPhone','customerAddress','customerGSTIN','notes','received','dueDate'].forEach(id=>$(id).addEventListener('input',renderInvoicePreview));
+$('status').addEventListener('change',renderInvoicePreview);$('paymentMethod').addEventListener('change',renderInvoicePreview);
+['qCompany','qCompanyAddress','qCompanyPhone','qCompanyEmail','qCompanyGSTIN','quoteNo','quoteDate','validUntil','qCustomer','qCustomerPhone','qCustomerAddress','qCustomerGSTIN','qNotes'].forEach(id=>$(id).addEventListener('input',renderQuotationPreview));
+}
+wire();ensureCustomerList();ensureProductList();loadSettingsUI();resetInvoiceForm();resetQuotation();updateDashboard();showPanel('dashboardPanel');
+setAppVisible(false);
+initAuth();
+</script>
+</body>
+</html>
