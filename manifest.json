@@ -1,0 +1,9 @@
+{
+  "name":"RJ Pocket Toolkit",
+  "short_name":"RJ Toolkit",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f5f7fb",
+  "theme_color":"#111827",
+  "description":"Invoice generator and useful everyday tools."
+}
